@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from dash import Dash, callback, dcc, html
+from dash import Dash, callback, dcc, html, dash_table
 from dash.dependencies import Input, Output
-import dash_table
 import pandas as pd
 import os
 from datetime import datetime, timedelta
