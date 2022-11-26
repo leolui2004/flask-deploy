@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from dash import Dash, callback
+from dash import Dash, callback, dcc, html
 from dash.dependencies import Input, Output
 import dash_table
 import pandas as pd
-import dash_core_components as dcc
-import dash_html_components as html
 import os
 from datetime import datetime, timedelta
 import plotly.express as px
