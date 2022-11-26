@@ -34,7 +34,7 @@ def output_tw(pathname):
     layout = [
         html.H3(children='H3 test'),
     ]
-    layout.append(html.H3(children=f'append test')
+    layout.append(html.H3(children=f'append test'))
     
     return layout
 
