@@ -13,11 +13,11 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import csv
 
-app = Dash(__name__, suppress_callback_exceptions=True)
-server = app.server
-app.title = "Test Title"
+application = Dash(__name__, suppress_callback_exceptions=True)
+server = application.server
+application.title = "Test Title"
 
-app.layout = html.Div([
+application.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
 ])
@@ -48,4 +48,4 @@ def display_page(pathname):
         return index_page
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=8080, debug=False)
+    application.run_server(host='0.0.0.0', port=8080, debug=False)
