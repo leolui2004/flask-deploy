@@ -10,11 +10,11 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import csv
 
-application = Dash(__name__, suppress_callback_exceptions=True)
-server = application.server
-application.title = "Test Title"
+app = Dash(__name__, suppress_callback_exceptions=True)
+application = app.server
+app.title = "Test Title"
 
-application.layout = html.Div([
+app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
 ])
