@@ -74,4 +74,5 @@ jobs:
       # Deploy to (or Create) the Elastic Beanstalk environment
       - name: Create test environment & deploy
         run: |
-          (eb use test-environment && eb status test-environment && eb deploy) || eb create test-environment
+          (eb use test-environment && eb status test-environment && eb deploy) || eb create test-environment --vpc.ec2subnets ${{ secrets.AWS_SUBNET_ID }} --vpc.elbsubnets ${{ secrets.AWS_SUBNET_ID }} --vpc.id ${{ secrets.AWS_VPC_ID }} --vpc.securitygroups ${{ secrets.AWS_SG_ID }} --vpc.publicip --vpc.elbpublic
+
