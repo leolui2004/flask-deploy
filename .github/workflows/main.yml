@@ -72,7 +72,7 @@ jobs:
         run: |
           eb init -p python-3.7 main --region ap-northeast-1
       # Deploy to (or Create) the Elastic Beanstalk environment
-      - name: Create test environment & deploy
+      - name: Create environment & deploy
         run: |
-          (eb use test-environment && eb status test-environment && eb deploy) || eb create test-environment --vpc.ec2subnets ${{ secrets.AWS_SUBNET_ID }} --vpc.elbsubnets ${{ secrets.AWS_SUBNET_ID }} --vpc.id ${{ secrets.AWS_VPC_ID }} --vpc.securitygroups ${{ secrets.AWS_SG_ID }} --vpc.publicip --vpc.elbpublic
+          (eb use flask-environment && eb status flask-environment && eb deploy) || eb create flask-environment --vpc.ec2subnets ${{ secrets.AWS_SUBNET_ID }} --vpc.elbsubnets ${{ secrets.AWS_SUBNET_ID }} --vpc.id ${{ secrets.AWS_VPC_ID }} --vpc.securitygroups ${{ secrets.AWS_SG_ID }} --vpc.publicip --vpc.elbpublic
 
