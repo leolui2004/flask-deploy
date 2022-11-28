@@ -10,7 +10,12 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import csv
 
-app = Dash(__name__, suppress_callback_exceptions=True)
+app = Dash(
+    __name__,
+    suppress_callback_exceptions=True,
+    assets_folder ="static",
+    assets_url_path="static"
+)
 application = app.server
 app.title = "Test Title"
 
