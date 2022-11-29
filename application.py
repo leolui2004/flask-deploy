@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from dash import Dash, callback, dcc, html, dash_table
+from dash import Dash, callback, dcc, html, dash_table, dcc
 from dash.dependencies import Input, Output
 import pandas as pd
 import os
@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import csv
+
+df = pd.read_csv('data/data.csv')
+df['year'] = df["Datetime"].str[:4]
 
 app = Dash(
     __name__,
@@ -37,6 +39,12 @@ def output_tw(pathname):
         html.H3(children='H3 test'),
     ]
     layout.append(html.H3(children=f'append test'))
+
+    layout.append(html.Div(html.Button('button', id='refresh', n_clicks=0), style={'width': 100}),)
+
+    layout.append(html.Div(children=[dcc.Slider(id='slider', min=2002,max=2018,value=2018, marks={2002:'2002',2004:'2004',2006:'2006',2008:'2008',2010:'2010',2012:'2012',2014:'2014',2016:'2016',2018:'2018'})]),)
+
+    layout.append(html.Div(children=[dcc.Graph(id='consumption', style={'height': 400})]),)
     
     return layout
 
@@ -48,6 +56,19 @@ def display_page(pathname):
         return html.Div(layout)
     else:
         return index_page
+
+@app.callback(
+    [Output('consumption', 'figure')],
+    [Input('refresh','n_clicks'),Input('slider','value')])
+def update_layout(n_clicks,value1):
+    fig_consumption = go.Figure()
+    if n_clicks > 0:
+        
+        df_output = df.loc[df['year'] == str(value1)]
+        
+        fig_consumption.add_trace(go.Scatter(x=df_output["Datetime"], y=df_output["Consumption"], mode='lines', connectgaps=True))
+        fig_consumption.update_layout(showlegend=False)
+    return [fig_consumption]
 
 if __name__ == '__main__':
     application.run_server(port=8080, debug=False)
