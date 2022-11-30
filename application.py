@@ -10,7 +10,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 df = pd.read_csv('data/data.csv')
-df['year'] = df["Datetime"].str[:4]
+df['Year'] = df["Datetime"].str[:4]
+
+df["Category"] = pd.cut(df["Consumption"], 4)
+df_aggr = df.groupby("Category").sum()
+df_aggr["Category"] = df_aggr.index.astype(str)
+
+df["Month"] = df["Datetime"].str[5:7]
+df["Hour"] = df["Datetime"].str[11:13]
+df_hourly = df.loc[(df['Year'] == '2018') & (df['Month'] == '01')]
 
 app = Dash(
     __name__,
@@ -46,6 +54,10 @@ def output_tw(pathname):
 
     layout.append(html.Div(children=[dcc.Graph(id='consumption', style={'height': 400})]),)
     
+    layout.append(html.Div(children=[dcc.Graph(id='category', style={'height': 400})]),)
+    
+    layout.append(html.Div(children=[dcc.Graph(id='hourly', style={'height': 600})]),)
+    
     return layout
 
 @callback(Output('page-content', 'children'),
@@ -58,17 +70,22 @@ def display_page(pathname):
         return index_page
 
 @app.callback(
-    [Output('consumption', 'figure')],
+    [Output('consumption', 'figure'),Output('category', 'figure'),Output('hourly', 'figure'),],
     [Input('refresh','n_clicks'),Input('slider','value')])
 def update_layout(n_clicks,value1):
     fig_consumption = go.Figure()
+    fig_category = go.Figure()
+    fig_hourly = go.Figure()
     if n_clicks > 0:
         
-        df_output = df.loc[df['year'] == str(value1)]
+        df_output = df.loc[df["Year"] == str(value1)]
         
         fig_consumption.add_trace(go.Scatter(x=df_output["Datetime"], y=df_output["Consumption"], mode='lines', connectgaps=True))
         fig_consumption.update_layout(showlegend=False)
-    return [fig_consumption]
+    fig_category.add_trace(go.Bar(x=df_aggr["Category"], y=df_aggr["Consumption"], text=df_aggr["Consumption"], textposition='auto',))
+    fig_category.update_layout(showlegend=True)
+    fig_hourly.add_trace(go.Scatter(x=df_hourly["Hour"], y=df_hourly["Consumption"], mode='markers'))
+    return [fig_consumption,fig_category,fig_hourly]
 
 if __name__ == '__main__':
     application.run_server(port=8080, debug=False)
